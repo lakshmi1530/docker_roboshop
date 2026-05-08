@@ -1,4 +1,27 @@
-#creating our own bridge so that 
+#Step-by-Step Disk Fix (LVM + Docker)
+🔹 Step 1: Check disk & mounts
+lsblk
+df -h
+👉 Identify:
+Disk (e.g., /dev/nvme0n1)
+Partition (e.g., nvme0n1p4)
+Mount (/var)
+🔹 Step 2: Expand partition to full disk
+sudo growpart /dev/nvme0n1 4
+👉 (4 = partition number)
+🔹 Step 3: Resize LVM physical volume
+sudo pvresize /dev/nvme0n1p4
+🔹 Step 4: Check free space in VG
+sudo vgdisplay
+👉 Look for: Free PE / Size
+🔹 Step 5: Extend /var (IMPORTANT for Docker)
+sudo lvextend -r -L +20G /dev/RootVG/varVol
+🔹 Step 6: Verify
+df -h
+👉 /var should be bigger now (10GB+)
+--------------------------------------------------------
+
+#creating our own bridge so that we can connect our docker containers.
 docker network ls
 docker network create roboshop
 
@@ -6,3 +29,26 @@ docker network create roboshop
 docker build -t lakshmi1530/catalogue:1.0.0 .
 docker run -d --network roboshop --name catalogue lakshmi1530/catalogue:1.0.0
 
+#frontend
+docker build -t lakshmi1530/frontend:1.0.0 .
+docker run -d -p 80:80 --network roboshop --name frontend lakshmi1530/frontend:1.0.0
+
+#mongodb
+docker build -t lakshmi1530/mongodb:1.0.0 .
+docker run -d --network roboshop --name mongodb lakshmi1530/mongodb:1.0.0
+
+#redis
+docker build -t lakshmi1530/redis:1.0.0 .
+docker run -d --network roboshop --name redis lakshmi1530/redis:1.0.0
+
+#user
+docker build -t lakshmi1530/user:1.0.0 .
+docker run -d --network roboshop --name user lakshmi1530/user:1.0.0
+
+#cart
+docker build -t lakshmi1530/cart:1.0.0 .
+docker run -d --network roboshop --name cart lakshmi1530/cart:1.0.0
+
+#payment
+docker build -t lakshmi1530/payment:1.0.0 .
+docker run -d --network roboshop --name payment lakshmi1530/payment:1.0.0
