@@ -1,10 +1,18 @@
 FROM python:3.9
+
 WORKDIR /app
+
 EXPOSE 8080
+
+COPY requirements.txt .
+
+RUN apt-get update && \
+    apt-get install -y gcc build-essential && \
+    pip3 install -r requirements.txt
+
 COPY *.py .
 COPY payment.ini .
-COPY requirements.txt .
-RUN pip3 install -r requirements.txt
+
 ENV CART_URL="cart" \
     CART_PORT="8080" \
     USER_URL="user" \
@@ -12,4 +20,5 @@ ENV CART_URL="cart" \
     AMQP_HOST="rabbitmq" \
     AMQP_USER="roboshop" \
     AMQP_PASS="roboshop123"
+
 CMD ["uwsgi", "--ini", "payment.ini"]
