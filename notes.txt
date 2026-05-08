@@ -1,0 +1,8 @@
+#creating our own bridge so that 
+docker network ls
+docker network create roboshop
+
+#catalogue
+docker build -t lakshmi1530/catalogue:1.0.0 .
+docker run -d --network roboshop --name catalogue lakshmi1530/catalogue:1.0.0
+
