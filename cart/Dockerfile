@@ -1,5 +1,6 @@
 FROM node:20
 WORKDIR /app
+EXPOSE 8080
 COPY package.json .
 COPY *.js .
 RUN npm install
