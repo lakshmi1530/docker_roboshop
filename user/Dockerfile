@@ -1,4 +1,4 @@
-FROM node:20.0.0
+FROM node:20
 WORKDIR /app
 ENV MONGO="true" \
     MONGODB_URL="mongodb://mongodb:27017/user" \
