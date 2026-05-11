@@ -13,12 +13,4 @@ RUN apt-get update && \
 COPY *.py .
 COPY payment.ini .
 
-# ENV CART_URL="cart" \
-#     CART_PORT="8080" \
-#     USER_URL="user" \
-#     USER_PORT="8080" \
-#     AMQP_HOST="rabbitmq" \
-#     AMQP_USER="roboshop" \
-#     AMQP_PASS="roboshop123"
-
 CMD ["uwsgi", "--ini", "payment.ini"]
